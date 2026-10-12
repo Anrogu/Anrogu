@@ -15,12 +15,12 @@
 **<h3 align="left">Connect with me:</h3>** 
 <p align="left"><a href="https://github.com/Anrogu" target="_blank"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" height="28" style="margin-right: 4px"></a> <a href="https://www.linkedin.com/in/Ángel Roberto Gutiérrez Ruiz" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" height="28" style="margin-right: 4px"></a> <a href="https://twitter.com/angelr_in4k" target="_blank"><img src="https://img.shields.io/badge/Twitter-000000?style=for-the-badge&logo=X&logoColor=white" height="28" style="margin-right: 4px"></a></p>
 
- **<h3 align="left">🚀 Computer Engineer student from the UAEMEX currently on third year, with experience developing Backend and Frontend, focused on REST arquchitecture in java and SpringBoot</h3>**
+ **<h3 align="left">🚀 Computer Engineer student from the UAEMEX currently on third year, with experience developing Backend and Frontend, focused on REST arquchitecture on java and SpringBoot</h3>**
 
 **<h3 align="left">Rapid Fire</h3>**
 
-- 💼 I'm currently working on: **💻 MsfConsole Exploits**
-- 🌱 I'm currently learning: **📚 IBM COBOL and MAINFRAME developer**
+- 💼 I'm currently working on: **💻 FullStack apps**
+- 🌱 I'm currently learning: **📚 IBM COBOL and MAINFRAME development**
 - 💬 Ask me about: **💡 Java, SpringBoot, PSQL, Linux, and RESTful APIs**
 
  **<h3 align="left">Skills</h3>**
