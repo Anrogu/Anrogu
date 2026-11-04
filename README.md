@@ -37,9 +37,7 @@
       <b>my most used language: <code>JavaScript</code></b>
       <!-- MOST_USED_LANGUAGE_END -->
       <br /><br />
-      <a href="./anglerfish.svg">
-        <img height="150" src="./anglerfish.gif" alt="Language Pixel Art Anglerfish" />
-      </a>
+      <img height="150" src="./anglerfish.gif" alt="Language Pixel Art Anglerfish" />
     </td>
   </tr>
 </table>
