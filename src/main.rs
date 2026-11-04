@@ -106,8 +106,25 @@ fn main() {
     let height = 12 * pixel_size;
 
     let mut svg = format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {} {}" width="{}" height="{}" shape-rendering="crispEdges">"#,
-        width, height, width, height
+        r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {} {}" width="{}" height="{}" shape-rendering="crispEdges">
+  <defs>
+    <filter id="lure-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="anglerfish">
+    <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0;0 -6;0 0" dur="2.4s" repeatCount="indefinite" />
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 {} {};2 {} {};0 {} {};-2 {} {};0 {} {}" dur="4.8s" repeatCount="indefinite" additive="sum" />"#,
+        width, height, width, height,
+        width / 2, height / 2,
+        width / 2, height / 2,
+        width / 2, height / 2,
+        width / 2, height / 2,
+        width / 2, height / 2,
     );
 
     for (y, row) in grid.iter().enumerate() {
@@ -122,19 +139,48 @@ fn main() {
             };
 
             if let Some(hex) = color {
-                svg.push_str(&format!(
-                    r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />"#,
-                    x * pixel_size,
-                    y * pixel_size,
-                    pixel_size,
-                    pixel_size,
-                    hex
-                ));
+                let is_lure = ch == 'L';
+                let is_pupil = ch == 'E';
+                if is_lure {
+                    svg.push_str(&format!(
+                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" filter="url(#lure-glow)">
+      <animate attributeName="opacity" values="1;0.35;1" dur="1.2s" repeatCount="indefinite" />
+      <animate attributeName="fill" values="{};#ffffff;{}" dur="1.2s" repeatCount="indefinite" />
+    </rect>"#,
+                        x * pixel_size,
+                        y * pixel_size,
+                        pixel_size,
+                        pixel_size,
+                        hex,
+                        hex,
+                        hex
+                    ));
+                } else if is_pupil {
+                    svg.push_str(&format!(
+                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}">
+      <animate attributeName="opacity" values="1;1;0;1" keyTimes="0;0.88;0.92;1" dur="4s" repeatCount="indefinite" />
+    </rect>"#,
+                        x * pixel_size,
+                        y * pixel_size,
+                        pixel_size,
+                        pixel_size,
+                        hex
+                    ));
+                } else {
+                    svg.push_str(&format!(
+                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />"#,
+                        x * pixel_size,
+                        y * pixel_size,
+                        pixel_size,
+                        pixel_size,
+                        hex
+                    ));
+                }
             }
         }
     }
 
-    svg.push_str("</svg>");
+    svg.push_str("</g></svg>");
 
     let mut file = File::create("anglerfish.svg").expect("Unable to create anglerfish.svg");
     file.write_all(svg.as_bytes()).expect("Unable to write SVG data");
