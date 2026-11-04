@@ -219,9 +219,10 @@ fn main() {
     let fin_rgb = hex_to_rgb(fin_color);
     let teeth_rgb = hex_to_rgb("#e6edf3");
     let pupil_rgb = hex_to_rgb("#0d1117");
+    let bubble_rgb = hex_to_rgb("#88dcff"); // Color celeste para las burbujas
     let white = (255u8, 255u8, 255u8);
 
-    // Suaviza el pulso de la linterna (hasta 65% hacia blanco para no perder el color del lenguaje)
+    // Suaviza el pulso de la linterna (hasta 65% hacia blanco)
     let mut lure_variants: Vec<(u8, u8, u8)> = Vec::new();
     for i in 0..8 {
         lure_variants.push(lerp_rgb(lure_rgb, white, (i as f32 / 7.0) * 0.65));
@@ -241,6 +242,8 @@ fn main() {
     let idx_fin = add_color(fin_rgb);
     let idx_teeth = add_color(teeth_rgb);
     let idx_pupil = add_color(pupil_rgb);
+    let idx_bubble = add_color(bubble_rgb);
+    let idx_white = add_color(white);
     let idx_lure: Vec<u8> = lure_variants.iter().map(|&v| add_color(v)).collect();
 
     // Rellenar paleta a potencia de 2 (16 colores) según el estándar GIF
@@ -255,7 +258,7 @@ fn main() {
         palette_bytes.push(*b);
     }
 
-    let pad = 10usize; // Margen para que nunca se corte la cola ni la linterna al moverse
+    let pad = 10usize;
     let width = (16 * pixel_size + pad * 2) as u16;
     let height = (12 * pixel_size + pad * 2) as u16;
 
@@ -263,6 +266,21 @@ fn main() {
     let mut encoder = Encoder::new(&mut gif_file, width, height, &palette_bytes)
         .expect("Unable to create GIF encoder");
     encoder.set_repeat(Repeat::Infinite).expect("Unable to set repeat");
+
+    // Configuración de 3 burbujas: (x_base, y_inicio, y_fin, desfase_frames, escala_subpixel)
+    let bubbles: [(i32, i32, i32, usize, i32); 3] = [
+        (3 * pixel_size as i32, 9 * pixel_size as i32, 2 * pixel_size as i32, 0, 4),
+        (1 * pixel_size as i32 + 8, 10 * pixel_size as i32, 1 * pixel_size as i32, 8, 3),
+        (4 * pixel_size as i32 - 4, 8 * pixel_size as i32, 3 * pixel_size as i32, 16, 3),
+    ];
+
+    // Matriz 4x4 para cada burbuja ('B' = borde celeste, 'W' = brillo blanco)
+    let bubble_sprite = [
+        ".BB.",
+        "BWWB",
+        "B..B",
+        ".BB.",
+    ];
 
     for i in 0..frames_count {
         let t = i as f32 / frames_count as f32;
@@ -276,11 +294,11 @@ fn main() {
         let pupil_visible = !(i % 12 == 0 || i % 12 == 1);
         let mut buffer = vec![0u8; (width as usize) * (height as usize)];
 
+        // 1. Dibujar el pez
         for (y, row) in grid.iter().enumerate() {
             for (x, ch) in row.chars().enumerate() {
                 let color_idx: u8 = match ch {
                     'B' => idx_primary,
-                    // Solo pulsa la linterna (x < 6); el ojo se mantiene en su color base
                     'L' => if x < 6 { lure_color_idx } else { idx_lure[0] },
                     'F' => idx_fin,
                     'T' => idx_teeth,
@@ -300,13 +318,47 @@ fn main() {
             }
         }
 
+        // 2. Dibujar las burbujas subiendo
+        for &(bx_base, by_start, by_end, phase, scale) in &bubbles {
+            let progress = ((i + phase) % frames_count) as f32 / frames_count as f32;
+            // Oculta la burbuja en el último 10% del recorrido como si reventara
+            if progress > 0.90 {
+                continue;
+            }
+            let norm_p = progress / 0.90;
+            let cur_y = by_start as f32 + (by_end as f32 - by_start as f32) * norm_p;
+            let wobble_x = (5.0 * (norm_p * std::f32::consts::TAU * 1.5).sin()).round() as i32;
+
+            let bx = bx_base + pad as i32 + wobble_x;
+            let by = cur_y.round() as i32 + pad as i32;
+
+            for (sy, srow) in bubble_sprite.iter().enumerate() {
+                for (sx, sch) in srow.chars().enumerate() {
+                    let b_color = match sch {
+                        'B' => idx_bubble,
+                        'W' => idx_white,
+                        _ => continue,
+                    };
+                    for yy in 0..scale {
+                        for xx in 0..scale {
+                            let px = bx + (sx as i32 * scale) + xx;
+                            let py = by + (sy as i32 * scale) + yy;
+                            if px >= 0 && py >= 0 && px < width as i32 && py < height as i32 {
+                                buffer[(py as usize) * (width as usize) + (px as usize)] = b_color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         let mut frame = Frame::default();
         frame.width = width;
         frame.height = height;
         frame.buffer = buffer.into();
         frame.delay = 8;
         frame.transparent = Some(0);
-        frame.dispose = DisposalMethod::Background; // <-- Elimina el rastro naranja/blanco
+        frame.dispose = DisposalMethod::Background;
         encoder.write_frame(&frame).expect("Unable to write GIF frame");
     }
 
