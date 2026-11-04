@@ -331,7 +331,7 @@ fn main() {
             let before = &readme[..start_idx];
             let after = &readme[end_idx + end_marker.len()..];
             let updated = format!(
-                "{}{}\n**my most used language: `{}`**\n{}{}",
+                "{}{}\n      <b>my most used language: <code>{}</code></b>\n      {}{}",
                 before, start_marker, top_language, end_marker, after
             );
             let _ = std::fs::write("README.md", updated);

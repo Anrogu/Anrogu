@@ -33,7 +33,13 @@
       <img height="200" src="https://streak-stats.demolab.com/?user=Anrogu&theme=react&hide_border=true&date_format=M+j%5B%2C+Y%5D&mode=daily&hide_total_contributions=false&hide_current_streak=false&hide_longest_streak=false&card_height=200" alt="GitHub streak Card" />
     </td>
     <td align="center" valign="middle">
-      <img height="200" src="https://raw.githubusercontent.com/Anrogu/Anrogu/main/anglerfish.svg" alt="Language Pixel Art Anglerfish" />
+      <!-- MOST_USED_LANGUAGE_START -->
+      <b>my most used language: <code>JavaScript</code></b>
+      <!-- MOST_USED_LANGUAGE_END -->
+      <br /><br />
+      <a href="./anglerfish.svg">
+        <img height="150" src="./anglerfish.gif" alt="Language Pixel Art Anglerfish" />
+      </a>
     </td>
   </tr>
 </table>
@@ -41,7 +47,3 @@
 **<h3 align="left">Support Me</h3>**
 
 <p align="left"><a href="https://paypal.me/Anrogu" target="_blank"><img src="https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white" height="36" style="margin-right: 4px"></a></p>
-<<<<<<< HEAD
-
-=======
->>>>>>> 9d29b0644a4822c1601e46ce92363d805ffe6d77
