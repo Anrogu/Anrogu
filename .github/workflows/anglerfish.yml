@@ -1,33 +1,29 @@
-name: Generate Pixel Anglerfish
+name: Update Anglerfish
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight UTC
-  workflow_dispatch:     # Allows manual trigger from the Actions tab
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-svg:
+  update-fish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout profile repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - name: Generate Pixel Art Anglerfish
+        uses: Anrogu/anglerfish-readme-action@v1.0.0
+        with:
+          github_username: ${{ github.repository_owner }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run generator
-        env:
-          GH_USERNAME: ${{ github.repository_owner }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cargo run --release
-
-      - name: Commit updated GIF
+      - name: Commit updated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add anglerfish.svg anglerfish.gif README.md
-          git diff --staged --quiet || git commit -m "chore: update language anglerfish animation"
+          git diff --staged --quiet || git commit -m "chore: update anglerfish"
           git push
