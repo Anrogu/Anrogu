@@ -212,8 +212,7 @@ fn main() {
 
     let mut file = File::create("anglerfish.svg").expect("Unable to create anglerfish.svg");
     file.write_all(svg.as_bytes()).expect("Unable to write SVG data");
-
-    // --- Animated GIF for GitHub README (SVG animations are stripped by GitHub) ---
+// --- Animated GIF for GitHub README ---
     let frames_count: usize = 24;
     let primary_rgb = hex_to_rgb(primary_color);
     let lure_rgb = hex_to_rgb(lure_color);
@@ -222,13 +221,13 @@ fn main() {
     let pupil_rgb = hex_to_rgb("#0d1117");
     let white = (255u8, 255u8, 255u8);
 
-    // Glow variants for the lure (8 steps between lure color and white)
+    // Suaviza el pulso de la linterna (hasta 65% hacia blanco para no perder el color del lenguaje)
     let mut lure_variants: Vec<(u8, u8, u8)> = Vec::new();
     for i in 0..8 {
-        lure_variants.push(lerp_rgb(lure_rgb, white, i as f32 / 7.0));
+        lure_variants.push(lerp_rgb(lure_rgb, white, (i as f32 / 7.0) * 0.65));
     }
 
-    // Build a deduplicated palette (index 0 = transparent)
+    // Construye la paleta (índice 0 = transparente)
     let mut pal: Vec<(u8, u8, u8)> = vec![(0, 0, 0)];
     let mut add_color = |c: (u8, u8, u8)| -> u8 {
         if let Some(i) = pal.iter().position(|&x| x == c) {
@@ -244,12 +243,11 @@ fn main() {
     let idx_pupil = add_color(pupil_rgb);
     let idx_lure: Vec<u8> = lure_variants.iter().map(|&v| add_color(v)).collect();
 
-    // Pad palette to a power of 2 (16 colors) as required by the GIF specification
+    // Rellenar paleta a potencia de 2 (16 colores) según el estándar GIF
     while pal.len() < 16 {
         pal.push((0, 0, 0));
     }
 
-    // Flatten palette to RGB triples
     let mut palette_bytes: Vec<u8> = Vec::with_capacity(pal.len() * 3);
     for (r, g, b) in &pal {
         palette_bytes.push(*r);
@@ -257,7 +255,7 @@ fn main() {
         palette_bytes.push(*b);
     }
 
-    let pad = 8usize; // Padding so bob_y and sway_x never clip the edges
+    let pad = 10usize; // Margen para que nunca se corte la cola ni la linterna al moverse
     let width = (16 * pixel_size + pad * 2) as u16;
     let height = (12 * pixel_size + pad * 2) as u16;
 
@@ -271,31 +269,22 @@ fn main() {
         let bob_y = (4.0 * (t * std::f32::consts::TAU).sin()).round() as i32;
         let sway_x = (2.0 * (t * std::f32::consts::TAU + std::f32::consts::FRAC_PI_2).sin()).round() as i32;
 
-        // Lure glow index (pulses twice per loop)
         let glow_t = ((t * 2.0 * std::f32::consts::TAU).sin() + 1.0) / 2.0;
-        let glow_idx = (glow_t * 7.0).round() as usize;
-        let glow_idx = glow_idx.min(idx_lure.len() - 1);
+        let glow_idx = ((glow_t * 7.0).round() as usize).min(idx_lure.len() - 1);
         let lure_color_idx = idx_lure[glow_idx];
 
-        // Pupil blink: hidden for 2 frames every 12
         let pupil_visible = !(i % 12 == 0 || i % 12 == 1);
-
         let mut buffer = vec![0u8; (width as usize) * (height as usize)];
 
         for (y, row) in grid.iter().enumerate() {
             for (x, ch) in row.chars().enumerate() {
                 let color_idx: u8 = match ch {
                     'B' => idx_primary,
-                    'L' => lure_color_idx,
+                    // Solo pulsa la linterna (x < 6); el ojo se mantiene en su color base
+                    'L' => if x < 6 { lure_color_idx } else { idx_lure[0] },
                     'F' => idx_fin,
                     'T' => idx_teeth,
-                    'E' => {
-                        if pupil_visible {
-                            idx_pupil
-                        } else {
-                            continue;
-                        }
-                    }
+                    'E' => if pupil_visible { idx_pupil } else { idx_lure[0] },
                     _ => continue,
                 };
 
@@ -315,9 +304,9 @@ fn main() {
         frame.width = width;
         frame.height = height;
         frame.buffer = buffer.into();
-        frame.delay = 8; // centiseconds (~12.5 fps)
+        frame.delay = 8;
         frame.transparent = Some(0);
-        frame.dispose = DisposalMethod::Background; // Clears previous frame to avoid ghosting
+        frame.dispose = DisposalMethod::Background; // <-- Elimina el rastro naranja/blanco
         encoder.write_frame(&frame).expect("Unable to write GIF frame");
     }
 
