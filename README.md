@@ -38,4 +38,8 @@
 
 <p align="center">
   <img src="./anglerfish.gif" alt="Language Pixel Art Anglerfish" width="320" />
+
+<!-- MOST_USED_LANGUAGE_START -->
+my most used language: JavaScript
+<!-- MOST_USED_LANGUAGE_END -->
 </p>

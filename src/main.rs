@@ -101,6 +101,11 @@ fn main() {
     let lure_color = top_langs.get(1).map(|(l, _)| get_language_color(l)).unwrap_or("#f1e05a");
     let fin_color = top_langs.get(2).map(|(l, _)| get_language_color(l)).unwrap_or("#3178c6");
 
+    let top_language = top_langs
+        .get(0)
+        .map(|(l, _)| l.clone())
+        .unwrap_or_else(|| "Unknown".to_string());
+
     // 16x12 Anglerfish Pixel Matrix
     // '.' = empty, 'L' = glowing esca/eye, 'F' = stalk/fins, 'B' = body, 'T' = teeth, 'E' = pupil
     let grid = [
@@ -304,4 +309,19 @@ fn main() {
     }
 
     // encoder finalizes on drop
+
+    // Update README.md with the most used language
+    if let Ok(readme) = std::fs::read_to_string("README.md") {
+        let start_marker = "<!-- MOST_USED_LANGUAGE_START -->";
+        let end_marker = "<!-- MOST_USED_LANGUAGE_END -->";
+        if let (Some(start_idx), Some(end_idx)) = (readme.find(start_marker), readme.find(end_marker)) {
+            let before = &readme[..start_idx];
+            let after = &readme[end_idx + end_marker.len()..];
+            let updated = format!(
+                "{}{}\nmy most used language: {}\n{}{}",
+                before, start_marker, top_language, end_marker, after
+            );
+            let _ = std::fs::write("README.md", updated);
+        }
+    }
 }
