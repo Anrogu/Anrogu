@@ -37,5 +37,5 @@
 <p align="left"><a href="https://paypal.me/Anrogu" target="_blank"><img src="https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white" height="36" style="margin-right: 4px"></a></p>
 
 <p align="center">
-  <img src="./anglerfish.svg" alt="Language Pixel Art Anglerfish" width="320" />
+  <img src="./anglerfish.gif" alt="Language Pixel Art Anglerfish" width="320" />
 </p>

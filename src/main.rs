@@ -1,9 +1,26 @@
+use gif::{Encoder, Frame, Repeat};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::Write;
+
+fn hex_to_rgb(hex: &str) -> (u8, u8, u8) {
+    let hex = hex.trim_start_matches('#');
+    let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);
+    let g = u8::from_str_radix(&hex[2..4], 16).unwrap_or(0);
+    let b = u8::from_str_radix(&hex[4..6], 16).unwrap_or(0);
+    (r, g, b)
+}
+
+fn lerp_rgb(a: (u8, u8, u8), b: (u8, u8, u8), t: f32) -> (u8, u8, u8) {
+    (
+        (a.0 as f32 + (b.0 as f32 - a.0 as f32) * t).round() as u8,
+        (a.1 as f32 + (b.1 as f32 - a.1 as f32) * t).round() as u8,
+        (a.2 as f32 + (b.2 as f32 - a.2 as f32) * t).round() as u8,
+    )
+}
 
 #[derive(Deserialize)]
 struct Repo {
@@ -184,4 +201,107 @@ fn main() {
 
     let mut file = File::create("anglerfish.svg").expect("Unable to create anglerfish.svg");
     file.write_all(svg.as_bytes()).expect("Unable to write SVG data");
+
+    // --- Animated GIF for GitHub README (SVG animations are stripped by GitHub) ---
+    let frames_count: usize = 24;
+    let primary_rgb = hex_to_rgb(primary_color);
+    let lure_rgb = hex_to_rgb(lure_color);
+    let fin_rgb = hex_to_rgb(fin_color);
+    let teeth_rgb = hex_to_rgb("#e6edf3");
+    let pupil_rgb = hex_to_rgb("#0d1117");
+    let white = (255u8, 255u8, 255u8);
+
+    // Glow variants for the lure (8 steps between lure color and white)
+    let mut lure_variants: Vec<(u8, u8, u8)> = Vec::new();
+    for i in 0..8 {
+        lure_variants.push(lerp_rgb(lure_rgb, white, i as f32 / 7.0));
+    }
+
+    // Build a deduplicated palette (index 0 = transparent)
+    let mut pal: Vec<(u8, u8, u8)> = vec![(0, 0, 0)];
+    let mut add_color = |c: (u8, u8, u8)| -> u8 {
+        if let Some(i) = pal.iter().position(|&x| x == c) {
+            return i as u8;
+        }
+        pal.push(c);
+        (pal.len() - 1) as u8
+    };
+
+    let idx_primary = add_color(primary_rgb);
+    let idx_fin = add_color(fin_rgb);
+    let idx_teeth = add_color(teeth_rgb);
+    let idx_pupil = add_color(pupil_rgb);
+    let idx_lure: Vec<u8> = lure_variants.iter().map(|&v| add_color(v)).collect();
+
+    // Flatten palette to RGB triples
+    let mut palette_bytes: Vec<u8> = Vec::with_capacity(pal.len() * 3);
+    for (r, g, b) in &pal {
+        palette_bytes.push(*r);
+        palette_bytes.push(*g);
+        palette_bytes.push(*b);
+    }
+
+    let width = (16 * pixel_size) as u16;
+    let height = (12 * pixel_size) as u16;
+
+    let mut gif_file = File::create("anglerfish.gif").expect("Unable to create anglerfish.gif");
+    let mut encoder = Encoder::new(&mut gif_file, width, height, &palette_bytes)
+        .expect("Unable to create GIF encoder");
+    encoder.set_repeat(Repeat::Infinite).expect("Unable to set repeat");
+
+    for i in 0..frames_count {
+        let t = i as f32 / frames_count as f32;
+        let bob_y = (4.0 * (t * std::f32::consts::TAU).sin()).round() as i32;
+        let sway_x = (2.0 * (t * std::f32::consts::TAU + std::f32::consts::FRAC_PI_2).sin()).round() as i32;
+
+        // Lure glow index (pulses twice per loop)
+        let glow_t = ((t * 2.0 * std::f32::consts::TAU).sin() + 1.0) / 2.0;
+        let glow_idx = (glow_t * 7.0).round() as usize;
+        let glow_idx = glow_idx.min(idx_lure.len() - 1);
+        let lure_color_idx = idx_lure[glow_idx];
+
+        // Pupil blink: hidden for 2 frames every 12
+        let pupil_visible = !(i % 12 == 0 || i % 12 == 1);
+
+        let mut buffer = vec![0u8; (width as usize) * (height as usize)];
+
+        for (y, row) in grid.iter().enumerate() {
+            for (x, ch) in row.chars().enumerate() {
+                let color_idx: u8 = match ch {
+                    'B' => idx_primary,
+                    'L' => lure_color_idx,
+                    'F' => idx_fin,
+                    'T' => idx_teeth,
+                    'E' => {
+                        if pupil_visible {
+                            idx_pupil
+                        } else {
+                            continue;
+                        }
+                    }
+                    _ => continue,
+                };
+
+                for yy in 0..pixel_size {
+                    for xx in 0..pixel_size {
+                        let px = (x * pixel_size) as i32 + xx as i32 + sway_x;
+                        let py = (y * pixel_size) as i32 + yy as i32 + bob_y;
+                        if px >= 0 && py >= 0 && px < width as i32 && py < height as i32 {
+                            buffer[(py as usize) * (width as usize) + (px as usize)] = color_idx;
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut frame = Frame::default();
+        frame.width = width;
+        frame.height = height;
+        frame.buffer = buffer.into();
+        frame.delay = 8; // centiseconds (~12.5 fps)
+        frame.transparent = Some(0);
+        encoder.write_frame(&frame).expect("Unable to write GIF frame");
+    }
+
+    // encoder finalizes on drop
 }
