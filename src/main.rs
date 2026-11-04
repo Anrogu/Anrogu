@@ -129,7 +129,7 @@ fn main() {
     let svg_height = (12 * pixel_size) + svg_header_offset;
 
     let mut svg = format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {} {}" width="{}" height="{}" shape-rendering="crispEdges">
+        r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {} {}" width="{}" height="{}" shape-rendering="crispEdges">
   <defs>
     <filter id="lure-glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="3" result="blur" />
@@ -144,7 +144,7 @@ fn main() {
   </text>
   <g id="anglerfish">
     <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0;0 -6;0 0" dur="2.4s" repeatCount="indefinite" />
-    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 {} {};2 {} {};0 {} {};-2 {} {};0 {} {}" dur="4.8s" repeatCount="indefinite" additive="sum" />"#,
+    <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 {} {};2 {} {};0 {} {};-2 {} {};0 {} {}" dur="4.8s" repeatCount="indefinite" additive="sum" />"##,
         svg_width, svg_height, svg_width, svg_height,
         primary_color, top_language,
         svg_width / 2, svg_height / 2,
@@ -166,15 +166,15 @@ fn main() {
             };
 
             if let Some(hex) = color {
-                let is_lure = ch == 'L';
+                let is_lure = ch == 'L' && x < 6;
                 let is_pupil = ch == 'E';
                 let py = (y * pixel_size) + svg_header_offset;
                 if is_lure {
                     svg.push_str(&format!(
-                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" filter="url(#lure-glow)">
+                        r##"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" filter="url(#lure-glow)">
       <animate attributeName="opacity" values="1;0.35;1" dur="1.2s" repeatCount="indefinite" />
       <animate attributeName="fill" values="{};#ffffff;{}" dur="1.2s" repeatCount="indefinite" />
-    </rect>"#,
+    </rect>"##,
                         x * pixel_size,
                         py,
                         pixel_size,
@@ -185,9 +185,9 @@ fn main() {
                     ));
                 } else if is_pupil {
                     svg.push_str(&format!(
-                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}">
+                        r##"<rect x="{}" y="{}" width="{}" height="{}" fill="{}">
       <animate attributeName="opacity" values="1;1;0;1" keyTimes="0;0.88;0.92;1" dur="4s" repeatCount="indefinite" />
-    </rect>"#,
+    </rect>"##,
                         x * pixel_size,
                         py,
                         pixel_size,
@@ -196,7 +196,7 @@ fn main() {
                     ));
                 } else {
                     svg.push_str(&format!(
-                        r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />"#,
+                        r##"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />"##,
                         x * pixel_size,
                         py,
                         pixel_size,
@@ -212,7 +212,8 @@ fn main() {
 
     let mut file = File::create("anglerfish.svg").expect("Unable to create anglerfish.svg");
     file.write_all(svg.as_bytes()).expect("Unable to write SVG data");
-// --- Animated GIF for GitHub README ---
+
+    // --- Animated GIF for GitHub README ---
     let frames_count: usize = 24;
     let primary_rgb = hex_to_rgb(primary_color);
     let lure_rgb = hex_to_rgb(lure_color);
