@@ -1,4 +1,4 @@
-use gif::{Encoder, Frame, Repeat};
+use gif::{DisposalMethod, Encoder, Frame, Repeat};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -104,7 +104,7 @@ fn main() {
     let top_language = top_langs
         .get(0)
         .map(|(l, _)| l.clone())
-        .unwrap_or_else(|| "Unknown".to_string());
+        .unwrap_or_else(|| "Java".to_string());
 
     // 16x12 Anglerfish Pixel Matrix
     // '.' = empty, 'L' = glowing esca/eye, 'F' = stalk/fins, 'B' = body, 'T' = teeth, 'E' = pupil
@@ -124,8 +124,9 @@ fn main() {
     ];
 
     let pixel_size = 20;
-    let width = 16 * pixel_size;
-    let height = 12 * pixel_size;
+    let svg_header_offset = 40;
+    let svg_width = 16 * pixel_size;
+    let svg_height = (12 * pixel_size) + svg_header_offset;
 
     let mut svg = format!(
         r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {} {}" width="{}" height="{}" shape-rendering="crispEdges">
@@ -138,15 +139,19 @@ fn main() {
       </feMerge>
     </filter>
   </defs>
+  <text x="50%" y="24" text-anchor="middle" font-family="Segoe UI, Ubuntu, sans-serif" font-weight="bold" font-size="16" fill="#c9d1d9">
+    my most used language: <tspan fill="{}">{}</tspan>
+  </text>
   <g id="anglerfish">
     <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0;0 -6;0 0" dur="2.4s" repeatCount="indefinite" />
     <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 {} {};2 {} {};0 {} {};-2 {} {};0 {} {}" dur="4.8s" repeatCount="indefinite" additive="sum" />"#,
-        width, height, width, height,
-        width / 2, height / 2,
-        width / 2, height / 2,
-        width / 2, height / 2,
-        width / 2, height / 2,
-        width / 2, height / 2,
+        svg_width, svg_height, svg_width, svg_height,
+        primary_color, top_language,
+        svg_width / 2, svg_height / 2,
+        svg_width / 2, svg_height / 2,
+        svg_width / 2, svg_height / 2,
+        svg_width / 2, svg_height / 2,
+        svg_width / 2, svg_height / 2,
     );
 
     for (y, row) in grid.iter().enumerate() {
@@ -163,6 +168,7 @@ fn main() {
             if let Some(hex) = color {
                 let is_lure = ch == 'L';
                 let is_pupil = ch == 'E';
+                let py = (y * pixel_size) + svg_header_offset;
                 if is_lure {
                     svg.push_str(&format!(
                         r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" filter="url(#lure-glow)">
@@ -170,7 +176,7 @@ fn main() {
       <animate attributeName="fill" values="{};#ffffff;{}" dur="1.2s" repeatCount="indefinite" />
     </rect>"#,
                         x * pixel_size,
-                        y * pixel_size,
+                        py,
                         pixel_size,
                         pixel_size,
                         hex,
@@ -183,7 +189,7 @@ fn main() {
       <animate attributeName="opacity" values="1;1;0;1" keyTimes="0;0.88;0.92;1" dur="4s" repeatCount="indefinite" />
     </rect>"#,
                         x * pixel_size,
-                        y * pixel_size,
+                        py,
                         pixel_size,
                         pixel_size,
                         hex
@@ -192,7 +198,7 @@ fn main() {
                     svg.push_str(&format!(
                         r#"<rect x="{}" y="{}" width="{}" height="{}" fill="{}" />"#,
                         x * pixel_size,
-                        y * pixel_size,
+                        py,
                         pixel_size,
                         pixel_size,
                         hex
@@ -238,6 +244,11 @@ fn main() {
     let idx_pupil = add_color(pupil_rgb);
     let idx_lure: Vec<u8> = lure_variants.iter().map(|&v| add_color(v)).collect();
 
+    // Pad palette to a power of 2 (16 colors) as required by the GIF specification
+    while pal.len() < 16 {
+        pal.push((0, 0, 0));
+    }
+
     // Flatten palette to RGB triples
     let mut palette_bytes: Vec<u8> = Vec::with_capacity(pal.len() * 3);
     for (r, g, b) in &pal {
@@ -246,8 +257,9 @@ fn main() {
         palette_bytes.push(*b);
     }
 
-    let width = (16 * pixel_size) as u16;
-    let height = (12 * pixel_size) as u16;
+    let pad = 8usize; // Padding so bob_y and sway_x never clip the edges
+    let width = (16 * pixel_size + pad * 2) as u16;
+    let height = (12 * pixel_size + pad * 2) as u16;
 
     let mut gif_file = File::create("anglerfish.gif").expect("Unable to create anglerfish.gif");
     let mut encoder = Encoder::new(&mut gif_file, width, height, &palette_bytes)
@@ -289,8 +301,8 @@ fn main() {
 
                 for yy in 0..pixel_size {
                     for xx in 0..pixel_size {
-                        let px = (x * pixel_size) as i32 + xx as i32 + sway_x;
-                        let py = (y * pixel_size) as i32 + yy as i32 + bob_y;
+                        let px = (x * pixel_size + pad) as i32 + xx as i32 + sway_x;
+                        let py = (y * pixel_size + pad) as i32 + yy as i32 + bob_y;
                         if px >= 0 && py >= 0 && px < width as i32 && py < height as i32 {
                             buffer[(py as usize) * (width as usize) + (px as usize)] = color_idx;
                         }
@@ -305,10 +317,11 @@ fn main() {
         frame.buffer = buffer.into();
         frame.delay = 8; // centiseconds (~12.5 fps)
         frame.transparent = Some(0);
+        frame.dispose = DisposalMethod::Background; // Clears previous frame to avoid ghosting
         encoder.write_frame(&frame).expect("Unable to write GIF frame");
     }
 
-    // encoder finalizes on drop
+    drop(encoder);
 
     // Update README.md with the most used language
     if let Ok(readme) = std::fs::read_to_string("README.md") {
@@ -318,7 +331,7 @@ fn main() {
             let before = &readme[..start_idx];
             let after = &readme[end_idx + end_marker.len()..];
             let updated = format!(
-                "{}{}\nmy most used language: {}\n{}{}",
+                "{}{}\n**my most used language: `{}`**\n{}{}",
                 before, start_marker, top_language, end_marker, after
             );
             let _ = std::fs::write("README.md", updated);
