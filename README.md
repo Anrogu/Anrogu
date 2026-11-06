@@ -19,9 +19,9 @@
 
 - 💼 I'm currently working on: **💻 FullStack apps**
 
-- 🌱 I'm currently preparing for: **📚 IBM, Oracle, Microsoft and other tech internships!**
+- 🌱 I'm currently preparing for: **📚 Any tech internship!**
 
-- 💬 Ask me about: **💡 Java, Spring Boot, PSQL, Linux, and RESTful APIs**
+- 💬 Ask me about: **💡 Java, javascript, Spring Boot, PSQL, Linux, and RESTful APIs**
 
 - 🏆 Achievement: **Semi-finalist of the Talent Land Hackathon 2026 (Fondo Seguro)**
 
