@@ -24,8 +24,19 @@
 - ⚡ Fun fact: i have a pet turtle.
 - 🗣️ Languages: Native Spanish, Fluent English.
 **<h3 align="left">Skills</h3>**
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Anrogu&layout=compact&theme=react&hide_border=true" alt="Top Languages" />
-<div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: left;"><img src="https://img.shields.io/badge/MongoDB-4EA94B?logo=mongodb&logoColor=white" height="28" alt="MongoDB" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Java-007396?logo=java&logoColor=white" height="28" alt="Java" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Node.js-8CC84B?logo=node.js&logoColor=white" height="28" alt="Node.js" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Spring-6DB33F?logo=spring&logoColor=white" height="28" alt="Spring" style="margin-right: 4px"> <img src="https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white" height="28" alt="PostgreSQL" style="margin-right: 4px"> <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white" height="28" alt="MySQL" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Jenkins-D24939?logo=jenkins&logoColor=white" height="28" alt="Jenkins" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" height="28" alt="Docker" style="margin-right: 4px"> <img src="https://img.shields.io/badge/IntelliJ_IDEA-000000?logo=intellij-idea&logoColor=white" height="28" alt="IntelliJ IDEA" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Unity-000000?logo=unity&logoColor=white" height="28" alt="Unity" style="margin-right: 4px"> <img src="https://img.shields.io/badge/Unreal_Engine-0E1128?logo=unreal-engine&logoColor=white" height="28" alt="Unreal Engine" style="margin-right: 4px"></div>
+<div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: left;">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" height="28" alt="Javascript" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/Java-007396?logo=java&logoColor=white" height="28" alt="Java" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/Node.js-8CC84B?logo=node.js&logoColor=white" height="28" alt="Node.js" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/Spring-6DB33F?logo=spring&logoColor=white" height="28" alt="Spring" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white" height="28" alt="PostgreSQL" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white" height="28" alt="MySQL" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB" height="28" alt="React" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" height="28" alt="Docker" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/IntelliJ_IDEA-000000?logo=intellij-idea&logoColor=white" height="28" alt="IntelliJ IDEA" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" height="28" alt="Linux" style="margin-right: 4px"> 
+  <img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white" height="28" alt="Html" style="margin-right: 4px">
+</div>
 
 **<h3 align="left">GitHub Stats</h3>**
 
