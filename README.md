@@ -18,11 +18,19 @@
 **<h3 align="left">Rapid Fire</h3>**
 
 - 💼 I'm currently working on: **💻 FullStack apps**
+
 - 🌱 I'm currently preparing for: **📚 IBM, Oracle, Microsoft and other tech internships!**
+
 - 💬 Ask me about: **💡 Java, Spring Boot, PSQL, Linux, and RESTful APIs**
+
+- 🏆 Achievement: **Semi-finalist of the Talent Land Hackathon 2026 (Fondo Seguro)**
+
 - 🎯 Open to: Summer internships, Junior Backend roles, or Open Source collaborations.
+
 - ⚡ Fun fact: i have a pet turtle.
+
 - 🗣️ Languages: Native Spanish, Fluent English.
+
 **<h3 align="left">Skills</h3>**
 <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: left;">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" height="28" alt="Javascript" style="margin-right: 4px"> 
@@ -36,6 +44,8 @@
   <img src="https://img.shields.io/badge/IntelliJ_IDEA-000000?logo=intellij-idea&logoColor=white" height="28" alt="IntelliJ IDEA" style="margin-right: 4px"> 
   <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" height="28" alt="Linux" style="margin-right: 4px"> 
   <img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white" height="28" alt="Html" style="margin-right: 4px">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white" height="28" alt="CSS" style="margin-right: 4px">
+  <img src="https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white" height="28" alt="Rust" style="margin-right: 4px">
 </div>
 
 **<h3 align="left">GitHub Stats</h3>**
@@ -58,4 +68,3 @@
 **<h3 align="left">Support Me</h3>**
 
 <p align="left"><a href="https://paypal.me/Anrogu" target="_blank"><img src="https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white" height="36" style="margin-right: 4px"></a></p>
-
