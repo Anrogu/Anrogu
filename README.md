@@ -31,6 +31,7 @@
 
 - 🗣️ Languages: Native Spanish, Fluent English.
 
+
 **<h3 align="left">Skills</h3>**
 <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: left;">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" height="28" alt="Javascript" style="margin-right: 4px"> 
@@ -64,4 +65,3 @@
     </td>
   </tr>
 </table>
-<p align="left"><a href="https://paypal.me/Anrogu" target="_blank"><img src="https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white" height="36" style="margin-right: 4px"></a></p>
