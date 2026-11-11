@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Backend developer (Java · Spring Boot · PostgreSQL)</b><br/>
-  Computer Engineering student at <b>UAEMEX</b> (3rd year) · Toluca, México<br/>
+  Computer Engineering student at <b>UAEMEX</b> (Expected Graduation: 2028) · Toluca, México<br/>
   Building <b>REST APIs</b> for real-world problems: industrial maintenance, academic management, and more.
 </p>
 
