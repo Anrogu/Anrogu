@@ -60,7 +60,7 @@ TODO: one line on what the project did and **your role** in the team ([repo / de
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
 
 **Exploring:**
-![Rust](src="https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white")
+![Rust](https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white)
 
 ### **🌱 Currently**
 
