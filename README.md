@@ -1,4 +1,4 @@
-<h1 align="center">Ángel Roberto Gutiérrez Ruiz</h1>
+![👋 Hi, my name is Ángel!](https://user-images.githubusercontent.com/10498744/210012254-234538ff-d198-48aa-8964-37e6fd45d227.gif)
 
 <p align="center">
   <b>Backend developer (Java · Spring Boot · PostgreSQL)</b><br/>
