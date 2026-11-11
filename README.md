@@ -59,7 +59,8 @@ TODO: one line on what the project did and **your role** in the team ([repo / de
 ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
 
-**Exploring:** Rust
+**Exploring:**
+![Rust](src="https://img.shields.io/badge/Rust-000000?logo=rust&logoColor=white")
 
 ### **🌱 Currently**
 
