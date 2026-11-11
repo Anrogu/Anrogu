@@ -26,16 +26,14 @@
 
 | Project | What it does | Stack |
 |---|---|---|
-| **[Spring Boot project: TODO name](TODO-link)** | TODO: one line on the problem it solves + the main result (e.g. N endpoints, JWT auth, deployed at X) | Java · Spring Boot · PostgreSQL · Docker |
-| **[Metalmod Core](https://github.com/Anrogu/metalmod_Core)** | Full-stack app that digitizes **maintenance reports** for CNC machines and lathes in an industrial plant. TODO: who uses it / what it replaced | JavaScript · TODO: DB |
-| **[SIGEVIS](https://github.com/Anrogu/SIGEVIS)** | Platform to manage **social service and professional internship** programs. TODO: roles, main modules, status | TODO: backend + DB |
+| **[Metalmod Core](https://github.com/Anrogu/metalmod_Core)** | Full-stack app built for an industrial plant that digitizes **maintenance reports** for CNC machines and lathes: **preventive and corrective** logging, plus the **full history** of each machine. Fully containerized with Docker Compose. | Java · Spring Boot · PostgreSQL · React · Docker |
+| **[SIGEVIS](https://github.com/Anrogu/SIGEVIS)** | Platform that replaces paperwork for **social service and professional internships**: **student portal**, **admin dashboard** to approve or reject applications and hours, **document management**, and **role-based access control** (students, coordinators, admins). | Java 17 · Spring Boot · PostgreSQL · React · Docker · Nginx |
 | **[3D Portfolio](https://github.com/Anrogu/portfolio)** | Interactive **isometric room** that I modeled myself in Blender | Three.js · GSAP · Tailwind |
 | **[AnglerFish4U](https://github.com/Anrogu/AnglerFish4U)** | **GitHub Action** that generates an animated pixel-art anglerfish for your profile | Rust |
 
 ### **🏆 Achievement**
 
-**Semi-finalist, Talent Land Hackathon 2026** (*Fondo Seguro*).
-TODO: one line on what the project did and **your role** in the team ([repo / demo](TODO-link)).
+**Semi-finalist, Talent Land Hackathon 2026** (*Fondo Seguro*)
 
 ### **🛠️ Skills**
 
@@ -56,6 +54,7 @@ TODO: one line on what the project did and **your role** in the team ([repo / de
 
 **Tools:**
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
 
